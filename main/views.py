@@ -1,28 +1,69 @@
+import datetime
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 from django.http import HttpResponse
 from django.core import serializers
 from django.shortcuts import render, redirect 
 from main.forms import ItemEntryForm
 from main.models import MagicItem
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import authenticate, login
+from django.contrib.auth import logout
+@login_required(login_url='/login')
+def show_main(request):
+    item_entries = MagicItem.objects.filter(user=request.user)
+    context = {
+        'npm' : '2306216075',
+        'name': request.user.username,
+        'class': 'PBP F',
+        'item_entries' : item_entries,
+        'last_login': request.COOKIES['last_login'],
+    }
+    return render(request, "main.html", context)
+def logout_user(request):
+    logout(request)
+    response = HttpResponseRedirect(reverse('main:login'))
+    response.delete_cookie('last_login')
+    return response
+def login_user(request):
+   if request.method == 'POST':
+      form = AuthenticationForm(data=request.POST)
+      if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            response = HttpResponseRedirect(reverse("main:show_main"))
+            response.set_cookie('last_login', str(datetime.datetime.now()))
+            return response
+   else:
+       form = AuthenticationForm(request)
+   context = {'form': form}
+   return render(request, 'login.html', context)
+def register(request):
+    form = UserCreationForm()
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your account has been successfully created!')
+            return redirect('main:login')
+    context = {'form':form}
+    return render(request, 'register.html', context)
+
 def create_item_entry(request):
     form = ItemEntryForm(request.POST or None)
 
     if form.is_valid() and request.method == "POST":
-        form.save()
+        item_entry = form.save(commit=False)
+        item_entry.user = request.user
+        item_entry.save()
         return redirect('main:show_main')
 
     context = {'form': form}
     return render(request, "create_item_entry.html", context)
-
-def show_main(request):
-    item_entries = MagicItem.objects.all()
-    context = {
-        'npm' : '2306216075',
-        'name': 'Juan Lukius Barnaby',
-        'class': 'PBP F',
-        'item_entries' : item_entries
-    }
-
-    return render(request, "main.html", context)
 def show_xml(request):
     data = MagicItem.objects.all()
     return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
