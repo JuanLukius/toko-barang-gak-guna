@@ -3,9 +3,9 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.core import serializers
-from django.shortcuts import render, redirect 
+from django.shortcuts import render, redirect, reverse
 from main.forms import ItemEntryForm
 from main.models import MagicItem
 from django.contrib.auth.forms import UserCreationForm
@@ -13,6 +13,7 @@ from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
+
 @login_required(login_url='/login')
 def show_main(request):
     item_entries = MagicItem.objects.filter(user=request.user)
@@ -76,3 +77,20 @@ def show_xml_by_id(request, id):
 def show_json_by_id(request, id):
     data = MagicItem.objects.filter(pk=id)
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+def edit_item(request, id):
+    item = MagicItem.objects.get(pk = id)
+    form = ItemEntryForm(request.POST or None, instance=item)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "edit_item.html", context)
+def delete_item(request, id):
+    # Get mood berdasarkan id
+    item = MagicItem.objects.get(pk = id)
+    # Hapus mood
+    item.delete()
+    # Kembali ke halaman awal
+    return HttpResponseRedirect(reverse('main:show_main'))
