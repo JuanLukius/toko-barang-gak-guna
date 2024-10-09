@@ -1,31 +1,34 @@
-# Apa perbedaan antara HttpResponseRedirect() dan redirect()
+#  Jika terdapat beberapa CSS selector untuk suatu elemen HTML, jelaskan urutan prioritas pengambilan CSS selector tersebut!
 
-HttpResponseRedirect hanya menerima url sebagai argument pertama, fungsi redirect pada akhirnya tetap akan mereturn HttpResponseRedirect, namun redirect dapat menerima model, view, atau url sebagai argumennya sehingga redirect lebih fleksibel. 
-.
+CSS memiliki urutan prioritas spesifik untuk menentukan mana yang diterapkan saat beberapa selector digunakan pada elemen yang sama. Prioritas diurutkan dari yang tertinggi ke terendah sebagai berikut:
 
-# Jelaskan cara kerja penghubungan model Product dengan User!
+Inline styles
+ID selectors
+Class selectors, attribute selectors, dan pseudo-classes
+Element selectors dan pseudo-elements
 
-proses penghubungan model product dengan user adalah proses yang dilakukan untuk menghubungkan user dengan productnya tanpa tercampur dengan user lain. Pengelompokan item diasosiasikan dengan user tersebut dapat dilakukan dengan menambahkan user yang terafliasi kepada setiap model entry pada models.py sehingga model dan user saling terafliasi secara one to one bukan one to many. Pada views.py proses penyimpanan form juga diganti agar terafliasi secara spesifik terhadap user, method form.save() diganti dengan item entry user yang diterima oleh request. Pada fungsi show_main dilakukan perubahan juga, yang awalnya hanya mengembalikan data yang dimilkinya sekarang dia akan memfilter terlebih dahulu ItemEntryForm dan hanya mengembalikan data yang dimiliki user yang mengirimkan request.
+# Mengapa responsive design menjadi konsep yang penting dalam pengembangan aplikasi web? Berikan contoh aplikasi yang sudah dan belum menerapkan responsive design!
 
-# Apa perbedaan antara authentication dan authorization, apakah yang dilakukan saat pengguna login? Jelaskan bagaimana Django mengimplementasikan kedua konsep tersebut.
+Responsive design adalah pendekatan untuk memastikan aplikasi web dapat menyesuaikan tampilan dan fungsionalitasnya dengan berbagai ukuran layar dan perangkat. Ini penting karena meningkatkan pengalaman pengguna, mendukung optimasi mesin pencari (SEO), dan efisiensi dalam pengembangan dengan mengurangi kebutuhan untuk membuat beberapa versi situs.
 
-Aunthetication adalah proses untuk memverifikasi apakah user tersebut valid atau tidak, untuk proyek django saat ini, proses aunthetication dilakukan dengan menerima username dan password dari pengguna untuk memastikan apakah pengguna tersebut adalah pengguna valid atau tidak. Di sisi lain authorization adalah proses pemberian hak pada suatu user, authorization adalah proses yang menentukan berhak atau tidaknya user tersebut melakukan suatu tindakan. Dalam project django kali ini, authorization dilakukan dengan memverifikasi hanya user terdaftar yang dapat melakukan penambahan produk, selain itu authorization dapat merupakan hak yang tidak dimiliki semua user yang ter aunthetication, artinya ada beberapa user yang dapat melakukan hal spesial bila diberikan contohnya user dengan id pertama dapat menghapus produk yang mereka miliki, atau akun admin yang dapat memonitorisasi apa yang terjadi di situs ketika pengguna lain yang ter autentikasi tidak dapat melakukanya.Kunci pembedanya adalah authorization mengatur aksi yang dapat dilakukan user, sedangkan authentication mengatur apakah user tersebut berhak atau valid untuk mengakses situs yang kita miliki.
+# Jelaskan perbedaan antara margin, border, dan padding, serta cara untuk mengimplementasikan ketiga hal tersebut!
 
-# Bagaimana Django mengingat pengguna yang telah login? Jelaskan kegunaan lain dari cookies dan apakah semua cookies aman digunakan?
+Margin adalah ruang di luar elemen yang menciptakan jarak dengan elemen lain. Border adalah garis yang mengelilingi elemen, terletak antara margin dan padding. Padding adalah ruang di dalam elemen, yang menciptakan jarak antara konten dan border.
 
-Django mengingat pengguna yang telah login dengan menggunakan cookies, cookies adalah tools dalam web development yang berfungsi untuk menyimpan tidakan yang dilakukan pengguna selama login. Dalam kasus ini, cookies mencatat kapan terakhir kali pengguna tersebut login kepada website. Perbedaan utama dari cookies dengan fitur adalah cookies hanya menyimpan data pengguna selama menggunakan situs, fitur dalam diibaratkan sebagai proses pembelanjaan yaitu menambahkan dan menghilangkan barang dari keranjang belanja, sedangkan cookies melacak barang yang dibeli atau dihilangkan dari keranjang belanja tersebut. 
 
-Dalam praktiknya cookies dapat menjadi fitur yang dianggap melanggar privasi pengguna, contohnya pada toko online besar, mereka menggunakan cookies untuk mengetahui produk apa yang kita suka, produk yang sering kita lihat di marketplace tersebut dan produk yang tidak pernah dilirik selama berbelanja. Cookies kemudian mengirimkan data tersebut yang digunakan untuk menyajikan sesuatu yang disukai user, cookies membuat pengalaman pengguna menjadi penentu apa yang akan disediakan oleh pembuat situs, walaupun terkesan tidak berbahaya, namun perusahaan jadi dapat melacak apa yang kita suka, metode pembayaran yang sering kita gunakand dll yang dapat digunakan semena mena untuk penjualan data, selain itu cookies juga sering digunakan untuk meraup keuntungan sebesar besarnya tanpa mementingkan dampaknya pada pengguna, contohnya seperti saranan video youtube dan tiktok yang dapat membuat pengguna ketagihan karena selalu disajikan dengan konten yang disukainya.
-XML dapat melakukan semua yang JSON dapat lakukan, selain itu, XML juga dapat memuat data type seperti boolean, dates, images dan namespaces. XML biasanya digunakan untuk dokumen markups, XML memang dapat melakukan semua yang dapat dilakukan oleh JSON, namun struktur XML lebih sulit untuk dimengerti dan biasanya sulit dibaca dalam pembuatan projek kompleks. Struktur JSOn lebih mudah untuk dibaca dan dimengerti dalam pembuatan proyek besar, selain itu, meski apa yang dapat dilakukan JSON terbatas, JSON memiliki size data yang lebih kecil dan waktu pemrosesan data yang lebih cepat. Mengapa JSON lebih populer daripada XML? karena banyak pekerjaan yang tidak membutuhkan apa yang dapat dilakukan oleh XML, oleh karena itu JSON menjadi pilihan dengan alasan lebih efisien dikarenakan JSON yang lebih mudah dikonstruksi dan dibaca, memiliki size yang lebih kecil dan waktu pemrosesan yang lebih cepat.
+# Jelaskan konsep flex box dan grid layout beserta kegunaannya!
+
+Flexbox adalah model layout untuk mengatur elemen dalam satu dimensi, memudahkan distribusi ruang dan penyelarasan. Grid Layout adalah model layout untuk mengatur elemen dalam dua dimensi, memberikan kontrol lebih besar atas tata letak, dan sangat cocok untuk desain yang kompleks.
+
  
 # Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
 
-1. membuat register, login dan logout untuk menerima user secara personal dan membuat setiap user unik
-2. memodifikasi forms.py,views.py dan urls.py untuk menyesuaikan perubahan personaalisasi agar dapat menampilkan, menerima, dan merekam hasil secara personal bagi setiap user dan bukan secara umum
-3. memodifikasi main.html dan menambahkan beberapa file .html baru untuk menyesuaikan format website agar terpisah per pengguna, selain itu menambahkan page registrasi, login dan logout pada html agar dapat terlihat oleh pengguna
-4. menambahkan cookies yang merekam aktivitas login mengguna, merubah forms dan views.py untuk mencatat cookies dan menampilkan cookies tersebut pada template
-5. memodifikasi template html yang ada agar dapat menerima cookies dan menampilkan last login pada main.html
-6. memodifikasi output agar sesuai dengan id user yang ada, memodifikasi penerimaan form juga sesuatu dengan user yang mengirimkan request dan menampilkan views yang sesuai dengan request user 
+1. membuat fungsi edit model
+2. membuat beberapa file html baru yang berfungsi sebagai fondasi design
+3. memodifikasi file views,dan url agar dapat menerapkan edit model
+4. menambahkan perubahan pada base.html dan membuat navbar yang di include oleh beberapa file yang ada di tugas 
+5. memodifikasi main.html agar bisa menampilkan desain tampilan baru
+6. memodfikasi desain menjadi hitam dan putih agar tidak 100% sama
 7. git add push commit
 
 
