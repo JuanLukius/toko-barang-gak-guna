@@ -13,36 +13,54 @@ from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 @login_required(login_url='/login')
 def show_main(request):
-    item_entries = MagicItem.objects.filter(user=request.user)
     context = {
         'npm' : '2306216075',
         'name': request.user.username,
         'class': 'PBP F',
-        'item_entries' : item_entries,
         'last_login': request.COOKIES['last_login'],
     }
     return render(request, "main.html", context)
+@csrf_exempt
+@require_POST
+def add_item_entry_ajax(request):
+    name = request.POST.get("name")
+    price =request.POST.get("price")
+    description = request.POST.get("description")
+    type = request.POST.get("type")
+    user = request.user
+    new_item = MagicItem(
+        name = name,price = price, description = description, type = type, user = user
+    )
+    new_item.save()
+    return HttpResponse(b"CREATED", status=201)
+
 def logout_user(request):
     logout(request)
     response = HttpResponseRedirect(reverse('main:login'))
     response.delete_cookie('last_login')
     return response
 def login_user(request):
-   if request.method == 'POST':
-      form = AuthenticationForm(data=request.POST)
-      if form.is_valid():
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+
+        if form.is_valid():
             user = form.get_user()
             login(request, user)
             response = HttpResponseRedirect(reverse("main:show_main"))
-            response.set_cookie('last_login', str(datetime.datetime.now()))
+            response.set_cookie('last_login', str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
             return response
-   else:
-       form = AuthenticationForm(request)
-   context = {'form': form}
-   return render(request, 'login.html', context)
+        else:
+            messages.error(request, "Invalid username or password. Please try again.")
+
+    else:
+        form = AuthenticationForm(request)
+    context = {'form': form}
+    return render(request, 'login.html', context)
 def register(request):
     form = UserCreationForm()
     if request.method == "POST":
@@ -66,10 +84,10 @@ def create_item_entry(request):
     context = {'form': form}
     return render(request, "create_item_entry.html", context)
 def show_xml(request):
-    data = MagicItem.objects.all()
+    data = MagicItem.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
 def show_json(request):
-    data = MagicItem.objects.all()
+    data = MagicItem.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 def show_xml_by_id(request, id):
     data = MagicItem.objects.filter(pk=id)

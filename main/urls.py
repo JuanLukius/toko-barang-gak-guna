@@ -5,6 +5,7 @@ from main.views import login_user
 from main.views import logout_user
 from main.views import edit_item
 from main.views import delete_item
+from main.views import add_item_entry_ajax
 
 
 app_name = 'main'
@@ -12,6 +13,7 @@ app_name = 'main'
 urlpatterns = [
     path('delete/<uuid:id>', delete_item, name='delete_item'),
     path('logout/', logout_user, name='logout'),
+    path('create-item-entry-ajax', add_item_entry_ajax, name='add_item_entry_ajax'),
     path('create-item-entry', create_item_entry, name='create_item_entry'),
     path('', show_main, name='show_main'),
     path('xml/', show_xml, name='show_xml'),
